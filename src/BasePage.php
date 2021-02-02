@@ -13,7 +13,7 @@
     $PRESET_SETTINGS = [
         "onAdmin" => null,                          // Callback when an admin logges in
         "onUser" => null,                           // Callback when a user logges in
-        "onNotLoggedIn" => "__send404Response",     // Callback when someone that is not logged in at all requests the page
+        "onNotLoggedIn" => "__send403Response",     // Callback when someone that is not logged in at all requests the page
         
         "onError" => "__sendUnknownError",           // Callback when something went wrong on the server side (Eg. database error)
 
@@ -74,11 +74,19 @@
         }
     }
 
-    function __send404Response(){
-        echo "404 page not found.";
+    /**
+     * Sends 403 as a default code for not implementing the method as it suggests that the page is forbidden
+     */
+    function __send403Response(){
+        header("HTTP/1.1 403 Forbidden");
+        echo "403 you are not allowed to access this page.";
     }
 
+    /**
+     * Sends an unknown error page if the error handler has not been overriden
+     */
     function __sendUnknownError($exception){
+        header("HTTP/1.1 500 Internal Server Error")
         echo "Unknown error occured: ".$exception;
     }
 
