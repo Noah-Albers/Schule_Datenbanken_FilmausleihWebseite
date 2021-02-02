@@ -1,6 +1,4 @@
 <?php
-    include_once("globals/Error.php");
-
     // Loads the database-configs
     $CONFIG = parse_ini_file(__DIR__."/../config.ini");
 
@@ -13,7 +11,7 @@
      * Also returns true if the connection was successful
      */
     function connectToDatabase(){
-        global $CONFIG,$DB_CON,$ERROR;$ERROR_CODES;
+        global $CONFIG,$DB_CON;
 
         // Checks if the connection is already established
         if($DB_CON && !$DB_CON->connect_errno)
@@ -22,11 +20,11 @@
         // Connects to the database
         $DB_CON = new mysqli($CONFIG["server"],$CONFIG["username"],$CONFIG["password"], $CONFIG["database"]);
 
+        var_dump($CONFIG);
         // Checks if the connection failed
-        if($DB_CON->connect_errno){
-            $ERROR=$ERROR_CODES["ERROR_DB_CONNECT"];
+        if($DB_CON->connect_errno)
             return false;
-        }
+
 
         return true;
     }
@@ -43,7 +41,7 @@
             throw new Exception("ERROR_DB_QUERY");
 
         // Binds the parameters if there are any
-        if(!$stmt->bind_param(str_repeat("s",count($params)), ...$params))
+        if(count($params) > 0 && !$stmt->bind_param(str_repeat("s",count($params)), ...$params))
             throw new Exception("ERROR_DB_QUERY_BIND");
 
         // Executes the query
@@ -66,7 +64,7 @@
             throw new Exception("ERROR_DB_QUERY");
 
         // Binds the parameters if there are any
-        if(!$stmt->bind_param(str_repeat("s",count($params)), ...$params))
+        if(count($params) > 0 && !$stmt->bind_param(str_repeat("s",count($params)), ...$params))
             throw new Exception("ERROR_DB_QUERY_BIND");
 
         // Executes the query

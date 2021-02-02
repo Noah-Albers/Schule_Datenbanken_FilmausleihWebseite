@@ -3,7 +3,7 @@
     include_once("Database.php");
 
     class User{
-        public $id,$sessionID,$firstname,$lastname,$email,$pass_hash,$pass_salt,$birthday;
+        public $id,$sessionID,$firstname,$lastname,$email,$pass_hash,$pass_salt,$birthday,$adminstatus;
 
         /**
          * Gets the user from an mysql result.
@@ -21,6 +21,7 @@
             $this->pass_hash=$mysqlResult["Pass_hash"];
             $this->pass_salt=$mysqlResult["Pass_salt"];
             $this->birthday=$mysqlResult["Geburtstag"];
+            $this->adminstatus=$mysqlResult["AdminStatus"];
         }
 
 
@@ -32,7 +33,7 @@
             // Tries to update the database with the given data
             // Forwards any exceptions
             $res = sendQuery(
-                "UPDATE `kunde` SET `SessionID`=?,`Vorname`=?,`Nachname`=?,`Email`=?,`Pass_hash`=?,`Pass_salt`=?,`Geburtstag`=? WHERE ID=?",
+                "UPDATE `kunde` SET `SessionID`=?,`Vorname`=?,`Nachname`=?,`Email`=?,`Pass_hash`=?,`Pass_salt`=?,`Geburtstag`=?,`AdminStatus`=? WHERE ID=?",
                 [
                     $this->sessionID,
                     $this->firstname,
@@ -41,6 +42,7 @@
                     $this->pass_hash,
                     $this->pass_salt,
                     $this->birthday,
+                    $this->adminstatus,
                     $this->id
                 ]
             );
@@ -52,6 +54,8 @@
      * 
      * @param id the user passed session id to search for
      * @throws exception the exception contains the string-key for the error code on the 
+     * 
+     * @return null if the session is invalid (Not found or not 20 characters long); otherwise the user instance
      */
     function getUserFromSessionID($id){
         global $DB_CON,$ERROR_CODES;
