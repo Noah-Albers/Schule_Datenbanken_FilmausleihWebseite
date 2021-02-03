@@ -20,7 +20,6 @@
         // Connects to the database
         $DB_CON = new mysqli($CONFIG["server"],$CONFIG["username"],$CONFIG["password"], $CONFIG["database"]);
 
-        var_dump($CONFIG);
         // Checks if the connection failed
         if($DB_CON->connect_errno)
             return false;
