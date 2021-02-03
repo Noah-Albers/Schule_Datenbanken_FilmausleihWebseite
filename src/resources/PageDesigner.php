@@ -148,7 +148,7 @@
 
                 // Loads the basic page
                 __loadPage($set, $handler, $context);
-            }catch(Exception $e){
+            }catch(\Exception $e){
                 // Executes the on error handler
                 $set["onError"]($e);
             }
