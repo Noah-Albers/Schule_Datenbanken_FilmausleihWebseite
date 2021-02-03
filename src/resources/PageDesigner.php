@@ -1,5 +1,4 @@
 <?php
-
     namespace {
         // Disables the output of errors
         error_reporting(E_ERROR | E_PARSE);
@@ -12,7 +11,7 @@
 
     namespace pageDesigner{
         // Imports the user manager
-        include_once("resources/Usermanager.php");
+        include_once("Usermanager.php");
 
         /**
          * The settings are defined as an array with specifiy values. Alle values that have a [O] in front of them can be set
@@ -69,8 +68,8 @@
 
         // Holds all presets of the settings. These will be merged together with the individual passed settings
         $PRESET_SETTINGS = [
-            "body" => fn($context) => __sendNotImplemented("Body")
-            "head" => fn($context) => __sendNotImplemented("Head")
+            "body" => fn($context) => __sendNotImplemented("Body"),
+            "head" => fn($context) => __sendNotImplemented("Head"),
             "onError" => fn($exc)=>__sendUnknownError($exc),
             "sessionKey" => "sessionID"
         ];
@@ -91,10 +90,10 @@
 
                 // Checks if the handler gives the key element
                 if(isset($handler[$key]))
-                    $ret = header($handler[$key]($context));
+                    $ret = $handler[$key]($context);
                 // Checks if the page gives the key element
                 else if(isset($settings[$key]))
-                    $ret = header($settings[$key]($context));
+                    $ret = $settings[$key]($context);
                 
                 // Checks if eigther an advanced execution is available (optHandler is set)
                 // and if the execution gave an value ($ret is set)
@@ -113,7 +112,7 @@
                     <meta name='viewport' content='width=device-width, initial-scale=1'>
                     <?php
                         // Includes the title
-                        $insert("pagetitle",fn($val)=>print("<title>".htmlspecialchars($val)."</title>"));
+                        $insert("pagetitle",fn($val)=>print("<title> Filmausleih | ".htmlspecialchars($val)."</title>"));
 
                         // Inserts the head
                         $insert("head");
@@ -148,7 +147,7 @@
                 $handler = __getCurrentPageHandler($set,$context);
 
                 // Loads the basic page
-                __loadPage($settings, $handler, $context);
+                __loadPage($set, $handler, $context);
             }catch(Exception $e){
                 // Executes the on error handler
                 $set["onError"]($e);
